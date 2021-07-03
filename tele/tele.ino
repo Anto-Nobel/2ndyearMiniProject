@@ -83,7 +83,7 @@ void setup() {
   Serial.begin(115200);  
   pinMode(ms,INPUT_PULLUP); 
   attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
-  WiFi.mode(WiFi_STA); 
+  WiFi.mode(WIFI_STA); 
   WiFi.begin(ssid,pwd); 
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT); 
   while(WiFi.status()!=WL_CONNECTED)
@@ -108,7 +108,7 @@ void loop() {
     } 
     prevMillis=millis();
   } 
-  if(motionDetected)
+  if(d)
   {
     bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
     d=false;
