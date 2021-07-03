@@ -16,9 +16,9 @@ char *smsg[2];
 char *ptr=NULL; 
 const int ms=27; 
 bool d=false;
-#define BOTtoken ""
+#define BOTtoken "1853711197:AAFCs29IvhgcMvZ3TC6Zot97jG0aWcN-r0g"
 
-#define CHAT_ID " "
+#define CHAT_ID "876922029"
 
 WiFiClientSecure client; 
 UniversalTelegramBot bot(BOTtoken,client); 
@@ -40,7 +40,7 @@ void handler(int count)
 {
   Serial.println("Handling Messages"); 
   Serial.println(String(count)); 
-  for(int i=0;i<count;i++)
+  for(int i=0;i<count+1;i++)
   {
     String id=String(bot.messages[i].chat_id); 
     if(id!=CHAT_ID)
@@ -79,10 +79,13 @@ void handler(int count)
 
 void IRAM_ATTR detectsMovement() 
 {d= true;}
+
+
+
+
+
 void setup() {
   Serial.begin(115200);  
-  pinMode(ms,INPUT_PULLUP); 
-  attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
   WiFi.mode(WIFI_STA); 
   WiFi.begin(ssid,pwd); 
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT); 
@@ -93,12 +96,22 @@ void setup() {
   } 
   Serial.println("Connected to: "); 
   Serial.println(WiFi.localIP());
-  
+  pinMode(ms,INPUT_PULLUP); 
+  attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
 }
+
+
+
+
 
 void loop() {
   if(millis()-prevMillis>=Reqdelay)
   {
+    if(d)
+  {
+    bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
+    d=false;
+  } 
     int msgcount=bot.getUpdates(bot.last_message_received+1); 
     while(msgcount)
     {
@@ -108,9 +121,6 @@ void loop() {
     } 
     prevMillis=millis();
   } 
-  if(d)
-  {
-    bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
-    d=false;
-  }
+  
+  bot.sendMessage(CHAT_ID,"HELLO"," ");
 }
