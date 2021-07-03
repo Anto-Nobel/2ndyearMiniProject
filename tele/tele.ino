@@ -14,7 +14,9 @@ const char* pwd="sarobert";
 char array[7];
 char *smsg[2]; 
 char *ptr=NULL; 
-const int ms=27; 
+
+//const int ms=27; 
+
 bool d=false;
 #define BOTtoken "1853711197:AAFCs29IvhgcMvZ3TC6Zot97jG0aWcN-r0g"
 
@@ -25,22 +27,22 @@ UniversalTelegramBot bot(BOTtoken,client);
 
 int Reqdelay=1000; 
 unsigned long prevMillis; 
-char a[10];
-Adafruit_BME280 bme; 
+//char a[10];
+//Adafruit_BME280 bme; 
 
-String getReadings()
+/*String getReadings()
 {
   float t,h; 
   t = bme.readTemperature();
   h = bme.readHumidity();
   return "Temperature: " + String(t) + " ºC \nHumidity: " + String (h) + " % \n";
-}  
+}  */
 
 void handler(int count)
 {
   Serial.println("Handling Messages"); 
   Serial.println(String(count)); 
-  for(int i=0;i<count+1;i++)
+  for(int i=0;i<count;i++)
   {
     String id=String(bot.messages[i].chat_id); 
     if(id!=CHAT_ID)
@@ -49,14 +51,21 @@ void handler(int count)
       continue;
     }  
     String msg=bot.messages[i].text; 
-    msg.toCharArray(array,7);
+    //msg.toCharArray(array,7);
     Serial.println(msg); 
     String sender=bot.messages[i].from_name; 
-    String welcome="Welcome, "+sender+"\n Commands are:\n /stat \n/_on_ \n/_off \nFollow up the command with a space and GPIO no.\n available pins are 4,15,34,35,25,14,12,13";
-    ptr=strtok(array," "); 
+    if(msg=="/start"){  
+      String welcome="Welcome, "+sender+"\n Commands are:\n /stat \n/_on_ \n/_off \nFollow up the command with = and GPIO no.\n available pins are 4,15,34,35,25,14,12,13";
+    bot.sendMessage(id, welcome, ""); }
+    
+    strcpy(array,msg.c_str());
+    ptr=strtok(array,"="); 
     smsg[0]=ptr; 
-    ptr=strtok(NULL," "); 
+    ptr=strtok(NULL,"="); 
     if(ptr!=NULL){smsg[1]=ptr;}
+    
+    
+    
     if(smsg[0]=="/stat")
     {
        if(digitalRead(atoi(smsg[1]))){bot.sendMessage(id,"ON","");} 
@@ -71,14 +80,14 @@ void handler(int count)
     {
       digitalWrite(atoi(smsg[1]),LOW);
     } 
-    if(smsg[0]=="/read")
+    /*if(smsg[0]=="/read")
     {
       bot.sendMessage(id,getReadings(),"");
-    }
+    }*/
 }} 
 
-void IRAM_ATTR detectsMovement() 
-{d= true;}
+//void IRAM_ATTR detectsMovement() 
+//{d= true;}
 
 
 
@@ -96,8 +105,8 @@ void setup() {
   } 
   Serial.println("Connected to: "); 
   Serial.println(WiFi.localIP());
-  pinMode(ms,INPUT_PULLUP); 
-  attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
+  //pinMode(ms,INPUT_PULLUP); 
+  //attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
 }
 
 
@@ -105,13 +114,14 @@ void setup() {
 
 
 void loop() {
-  if(millis()-prevMillis>=Reqdelay)
+  bot.sendMessage(CHAT_ID,"HELLO"," ");
+  if(millis()>=Reqdelay+prevMillis)
   {
-    if(d)
+    /*if(d)
   {
     bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
     d=false;
-  } 
+  }*/ 
     int msgcount=bot.getUpdates(bot.last_message_received+1); 
     while(msgcount)
     {
@@ -122,5 +132,5 @@ void loop() {
     prevMillis=millis();
   } 
   
-  bot.sendMessage(CHAT_ID,"HELLO"," ");
+  
 }
