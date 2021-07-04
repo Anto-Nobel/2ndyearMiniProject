@@ -61,22 +61,23 @@ void handler(int count)
     strcpy(array,msg.c_str());
     ptr=strtok(array,"="); 
     smsg[0]=ptr; 
-    ptr=strtok(NULL,"="); 
-    if(ptr!=NULL){smsg[1]=ptr;}
+    ptr=strtok(NULL,"=");
+    if(ptr!=NULL){smsg[1]=ptr;} 
     
     
-    
-    if(smsg[0]=="/stat")
+    Serial.println(smsg[0]); 
+    Serial.println(smsg[1]);
+    if(msg.startsWith("/stat"))
     {
        if(digitalRead(atoi(smsg[1]))){bot.sendMessage(id,"ON","");} 
        else{bot.sendMessage(id,"OFF","");}
     } 
-    if(smsg[0]=="/_on_")
+    if(msg.startsWith("/_on_"))
     {
-      pinMode(atoi(smsg[1]),OUTPUT); 
+      Serial.println(smsg[0]); 
       digitalWrite(atoi(smsg[1]),HIGH);
     } 
-    if(smsg[0]=="/_off")
+    if(msg.startsWith("/_off"))
     {
       digitalWrite(atoi(smsg[1]),LOW);
     } 
@@ -106,7 +107,16 @@ void setup() {
   Serial.println("Connected to: "); 
   Serial.println(WiFi.localIP());
   //pinMode(ms,INPUT_PULLUP); 
-  //attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING);
+  //attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING); 
+  pinMode(2,OUTPUT);
+  pinMode(4,OUTPUT); 
+  pinMode(15,OUTPUT); 
+  pinMode(34,OUTPUT);
+  pinMode(35,OUTPUT);
+  pinMode(25,OUTPUT);
+  pinMode(14,OUTPUT); 
+  pinMode(12,OUTPUT); 
+  pinMode(13,OUTPUT);
 }
 
 
