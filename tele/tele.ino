@@ -1,6 +1,4 @@
-
-  #include <WiFi.h>
-
+#include <WiFi.h>
 #include <WiFiClientSecure.h> 
 #include <UniversalTelegramBot.h> 
 #include <ArduinoJson.h>
@@ -30,11 +28,11 @@ Adafruit_BMP280 bmp;
 
 String getReadings()
 {
-  float t,h,p; 
+  float t,a,m; 
   t = bmp.readTemperature();
-  h = bmp.readAltitude(1006);
-  p=bmp.readPressure()/100;
-  return "Temperature: " + String(t) + " ºC \nAltitude: " + String (h) + " m \nPressure" +String(p)+"hp";
+  a = bmp.readAltitude(1006);
+  m=bmp.readPressure()/100;
+  return "Temperature: " + String(t) + " ºC \nAltitude: " + String (a) + " m \nPressure" +String(m)+"hp";
 }  
 
 void handler(int count)
