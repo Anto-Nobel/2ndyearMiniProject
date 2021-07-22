@@ -1,12 +1,10 @@
-#ifdef ESP32
+
   #include <WiFi.h>
-#else
-  #include <ESP8266WiFi.h>
-#endif
+
 #include <WiFiClientSecure.h> 
 #include <UniversalTelegramBot.h> 
 #include <ArduinoJson.h>
-#include <Adafruit_BME280.h>
+#include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
 const char* ssid="nobel"; 
 const char* pwd="sarobert";
@@ -15,7 +13,7 @@ char array[7];
 char *smsg[2]; 
 char *ptr=NULL; 
 
-//const int ms=27; 
+const int ms=27; 
 
 bool d=false;
 #define BOTtoken "1853711197:AAFCs29IvhgcMvZ3TC6Zot97jG0aWcN-r0g"
@@ -27,16 +25,17 @@ UniversalTelegramBot bot(BOTtoken,client);
 
 int Reqdelay=1000; 
 unsigned long prevMillis; 
-//char a[10];
-//Adafruit_BME280 bme; 
+char a[10];
+Adafruit_BMP280 bmp; 
 
-/*String getReadings()
+String getReadings()
 {
-  float t,h; 
-  t = bme.readTemperature();
-  h = bme.readHumidity();
-  return "Temperature: " + String(t) + " ºC \nHumidity: " + String (h) + " % \n";
-}  */
+  float t,h,p; 
+  t = bmp.readTemperature();
+  h = bmp.readAltitude(1006);
+  p=bmp.readPressure()/100;
+  return "Temperature: " + String(t) + " ºC \nAltitude: " + String (h) + " m \nPressure" +String(p)+"hp";
+}  
 
 void handler(int count)
 {
@@ -81,14 +80,14 @@ void handler(int count)
     {
       digitalWrite(atoi(smsg[1]),LOW);
     } 
-    /*if(smsg[0]=="/read")
+    if(smsg[0]=="/read")
     {
       bot.sendMessage(id,getReadings(),"");
-    }*/
+    }
 }} 
 
-//void IRAM_ATTR detectsMovement() 
-//{d= true;}
+void IRAM_ATTR detectsMovement() 
+{d= true;}
 
 
 
@@ -106,8 +105,8 @@ void setup() {
   } 
   Serial.println("Connected to: "); 
   Serial.println(WiFi.localIP());
-  //pinMode(ms,INPUT_PULLUP); 
-  //attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING); 
+  pinMode(ms,INPUT_PULLUP); 
+  attachInterrupt(digitalPinToInterrupt(ms), detectsMovement, RISING); 
   pinMode(2,OUTPUT);
   pinMode(4,OUTPUT); 
   pinMode(15,OUTPUT); 
@@ -127,11 +126,11 @@ void loop() {
   bot.sendMessage(CHAT_ID,"HELLO"," ");
   if(millis()>=Reqdelay+prevMillis)
   {
-    /*if(d)
+    if(d)
   {
     bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
     d=false;
-  }*/ 
+  } 
     int msgcount=bot.getUpdates(bot.last_message_received+1); 
     while(msgcount)
     {
