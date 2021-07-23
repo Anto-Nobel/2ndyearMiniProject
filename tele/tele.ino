@@ -4,8 +4,8 @@
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
-const char* ssid="nobel"; 
-const char* pwd="sarobert";
+const char* ssid="Arunkumar M"; 
+const char* pwd="arun_2002";
 
 char array[7];
 char *smsg[2]; 
@@ -14,9 +14,9 @@ char *ptr=NULL;
 const int ms=27; 
 
 bool d=false;
-#define BOTtoken "1853711197:AAFCs29IvhgcMvZ3TC6Zot97jG0aWcN-r0g"
+#define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE"
 
-#define CHAT_ID "876922029"
+#define CHAT_ID "1824993117"
 
 WiFiClientSecure client; 
 UniversalTelegramBot bot(BOTtoken,client); 
@@ -28,11 +28,10 @@ Adafruit_BMP280 bmp;
 
 String getReadings()
 {
-  float t,a,m; 
+  float t,m; 
   t = bmp.readTemperature();
-  a = bmp.readAltitude(1006);
   m=bmp.readPressure()/100;
-  return "Temperature: " + String(t) + " ºC \nAltitude: " + String (a) + " m \nPressure" +String(m)+"hp";
+  return "Temperature: " + String(t) + " ºC \nPressure: " +String(m)+"hPa";
 }  
 
 void handler(int count)
@@ -78,7 +77,7 @@ void handler(int count)
     {
       digitalWrite(atoi(smsg[1]),LOW);
     } 
-    if(smsg[0]=="/read")
+    if(msg.startsWith("/read"))
     {
       bot.sendMessage(id,getReadings(),"");
     }
@@ -114,6 +113,16 @@ void setup() {
   pinMode(14,OUTPUT); 
   pinMode(12,OUTPUT); 
   pinMode(13,OUTPUT);
+  if (!bmp.begin()) {
+    Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
+  }
+
+  /* Default settings from datasheet. */
+  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 }
 
 
