@@ -21,7 +21,7 @@ bool d=false;
 WiFiClientSecure client; 
 UniversalTelegramBot bot(BOTtoken,client); 
 
-int Reqdelay=1000; 
+int Reqdelay=1000,c=1; 
 unsigned long prevMillis; 
 char a[10];
 Adafruit_BMP280 bmp; 
@@ -130,7 +130,7 @@ void setup() {
 
 
 void loop() {
-  bot.sendMessage(CHAT_ID,"HELLO"," ");
+  //bot.sendMessage(CHAT_ID,"HELLO"," ");
   if(millis()>=Reqdelay+prevMillis)
   {
     if(d)
@@ -144,8 +144,19 @@ void loop() {
       Serial.print("Message Received"); 
       handler(msgcount); 
       msgcount=bot.getUpdates(bot.last_message_received+1);
-    } 
-    prevMillis=millis();
+    }  if(c==3){
+    WiFiClient client;
+    HTTPClient http; 
+    http.begin(client,"https://interscholastic-rec.000webhostapp.com/telepost.php"); 
+    http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    String httpRequestData = "api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu" + "&value1=" + String(bme.readTemperature())
+                           +  "&value3=" + String(bme.readPressure()/100.0) + "";
+    
+      int httpResponseCode = http.POST(httpRequestData);
+      c=1;
+    }
+    prevMillis=millis(); 
+    c+=1;
   } 
   
   
