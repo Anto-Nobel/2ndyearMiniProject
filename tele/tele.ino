@@ -144,13 +144,13 @@ void loop() {
       Serial.print("Message Received"); 
       handler(msgcount); 
       msgcount=bot.getUpdates(bot.last_message_received+1);
-    }  if(c==3){
+    }  if(c==30){
     WiFiClient client;
     HTTPClient http; 
     http.begin(client,"https://interscholastic-rec.000webhostapp.com/telepost.php"); 
     http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
     String httpRequestData = "api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu" + "&value1=" + String(bme.readTemperature())
-                           +  "&value3=" + String(bme.readPressure()/100.0) + "";
+                           +  "&value3=" + String(bme.readPressure()/100.0F) + "";
     
       int httpResponseCode = http.POST(httpRequestData);
       c=1;

@@ -5,12 +5,16 @@ $username="id17073338_esp_board";
 $password="esp32@RMK2019-2023";  
 
 $conn=new mysqli($servername,$username,$password,$dbname); 
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+} 
 $sql="SELECT id,value1,value2,reading_time FROM SensorData order by reading_time desc limit 40"; 
-
+$sensor_data=array();
 $result=$conn->query($sql); 
-while($data=$result->fecth_assoc()){
-$sensor_data[]=$data;} 
-$time=array_column($sensor_data,'reading_time'); 
+while ($row = $result->fetch_assoc()){
+  $sensor_data[] = $row;
+}
+$readings_time=array_column($sensor_data,'reading_time'); 
 $value1 = json_encode(array_reverse(array_column($sensor_data, 'value1')), JSON_NUMERIC_CHECK);
 $value2 = json_encode(array_reverse(array_column($sensor_data, 'value2')), JSON_NUMERIC_CHECK); 
 $reading_time = json_encode(array_reverse($readings_time), JSON_NUMERIC_CHECK); 
@@ -24,7 +28,7 @@ $conn->close();
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <style>
 body {
-  background-image: url('https://c4.wallpaperflare.com/wallpaper/282/308/59/abstract-vector-red-purple-wallpaper-preview.jpg'); 
+  /*background-image: url('https://c4.wallpaperflare.com/wallpaper/282/308/59/abstract-vector-red-purple-wallpaper-preview.jpg'); */
   min-width: 310px;
     	max-width: 1280px;
     	height: 500px;
