@@ -1,5 +1,9 @@
-#include <WiFi.h>
-#include <WiFiClientSecure.h> 
+//#include <WiFi.h> 
+#include <C:\Users\AntoNobel\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\WiFi\src\WiFi.h>
+#include <WiFiClientSecure.h>  
+#include <SPI.h> 
+#include <Wire.h> 
+#include <HTTPClient.h>
 #include <UniversalTelegramBot.h> 
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
@@ -16,7 +20,11 @@ const int ms=27;
 bool d=false;
 #define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE"
 
-#define CHAT_ID "1824993117"
+#define CHAT_ID "1824993117" 
+#define BMP_SCK (13); 
+#define BMP_MISO (12); 
+#define BMP_MOSI (11); 
+#define BMP_CS (10);
 
 WiFiClientSecure client; 
 UniversalTelegramBot bot(BOTtoken,client); 
@@ -149,8 +157,8 @@ void loop() {
     HTTPClient http; 
     http.begin(client,"https://interscholastic-rec.000webhostapp.com/telepost.php"); 
     http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
-    String httpRequestData = "api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu" + "&value1=" + String(bme.readTemperature())
-                           +  "&value3=" + String(bme.readPressure()/100.0F) + "";
+    String httpRequestData = "api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu" + "&value1=" + String(bmp.readTemperature())
+                           +  "&value2=" + String(bmp.readPressure()/100.0F) + "";
     
       int httpResponseCode = http.POST(httpRequestData);
       c=1;
