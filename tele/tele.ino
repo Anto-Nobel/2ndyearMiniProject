@@ -23,7 +23,7 @@ const int ms=27;
 
 bool d=false;
 #define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE" 
-const String serverName="https://unspoilt-compounds.000webhostapp.com/telepost.php?api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu";
+String serverName="https://unspoilt-compounds.000webhostapp.com/telepost.php?api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu&t=";
 
 #define CHAT_ID "1824993117" 
 #define BMP_SCK (13); 
@@ -168,8 +168,7 @@ void loop() {
     HTTPClient http; 
     //http.begin("https://interscholastic-rec.000webhostapp.com/telepost.php"); 
     //http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
-    serverName = serverName+"&t=" + String(bmp.readTemperature())+  "&p=" + String(bmp.readPressure()/100.0F) + "";
-    if(c==10)
+    serverName+=String(bmp.readTemperature())+"&p="+String(bmp.readPressure()/100.0F);
       http.begin(serverName.c_str());
       int httpResponseCode = http.GET(); 
       Serial.println(httpResponseCode);
