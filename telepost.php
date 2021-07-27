@@ -9,13 +9,13 @@ $api_key="jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu";
 
 $api=$val1=$val2=""; 
 
-if($_SERVER["REQUEST_METHOD"]=="POST")
+if($_SERVER["REQUEST_METHOD"]=="GET")
 {
-	$api=clean($_POST["api_key"]); 
+	$api=clean($_GET["api_key"]); 
 	if($api_key==$api)
 	{
-		$val1=clean($_POST["p"]); 
-		$val2=clean($_POST["t"]); 
+		$val1=clean($_GET["p"]); 
+		$val2=clean($_GET["t"]); 
 		$conn=new mysqli($servername,$username,$password,$dbname); 
 		$sql="INSERT INTO SensorData (value1,value2)  
 				VALUES ('" . $val1 . "','" . $val2 . "')";  

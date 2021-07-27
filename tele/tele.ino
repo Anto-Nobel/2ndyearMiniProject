@@ -1,9 +1,13 @@
-//#include <WiFi.h> 
-#include <C:\Users\AntoNobel\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\WiFi\src\WiFi.h>
-#include <WiFiClientSecure.h>  
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <HTTPClient.h>
+#else
+  #include <ESP8266WiFi.h>
+  #include <ESP8266HTTPClient.h>
+  #include <WiFiClient.h>
+#endif
 #include <SPI.h> 
 #include <Wire.h> 
-#include <HTTPClient.h>
 #include <UniversalTelegramBot.h> 
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
@@ -18,7 +22,8 @@ char *ptr=NULL;
 const int ms=27; 
 
 bool d=false;
-#define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE"
+#define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE" 
+const String serverName="https://unspoilt-compounds.000webhostapp.com/telepost.php?api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu";
 
 #define CHAT_ID "1824993117" 
 #define BMP_SCK (13); 
@@ -59,7 +64,7 @@ void handler(int count)
     Serial.println(msg); 
     String sender=bot.messages[i].from_name; 
     if(msg=="/start"){  
-      String welcome="Welcome, "+sender+"\n Commands are:\n /stat \n/_on_ \n/_off \nFollow up the command with = and GPIO no.\n available pins are 4,15,34,35,25,14,12,13";
+      String welcome="Welcome, "+sender+"\n Commands are:\n /stat \n/_on_ \n/_off \n/push \nFollow up the command with = and GPIO no.\n available pins are 4,15,34,35,25,14,12,13";
     bot.sendMessage(id, welcome, ""); }
     
     strcpy(array,msg.c_str());
@@ -88,6 +93,12 @@ void handler(int count)
     if(msg.startsWith("/read"))
     {
       bot.sendMessage(id,getReadings(),"");
+    } 
+    if(msg.startsWith("/push"))
+    {
+      digitalWrite(atoi(smsg[1]),HIGH); 
+      delay(500); 
+      digitalWrite(atoi(smsg[1]),LOW);
     }
 }} 
 
@@ -155,12 +166,13 @@ void loop() {
     }  if(c==30){
     WiFiClient client;
     HTTPClient http; 
-    http.begin(client,"https://interscholastic-rec.000webhostapp.com/telepost.php"); 
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
-    String httpRequestData = "api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu" + "&value1=" + String(bmp.readTemperature())
-                           +  "&value2=" + String(bmp.readPressure()/100.0F) + "";
-    
-      int httpResponseCode = http.POST(httpRequestData);
+    //http.begin("https://interscholastic-rec.000webhostapp.com/telepost.php"); 
+    //http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    serverName = serverName+"&t=" + String(bmp.readTemperature())+  "&p=" + String(bmp.readPressure()/100.0F) + "";
+    if(c==10)
+      http.begin(serverName.c_str());
+      int httpResponseCode = http.GET(); 
+      Serial.println(httpResponseCode);
       c=1;
     }
     prevMillis=millis(); 
