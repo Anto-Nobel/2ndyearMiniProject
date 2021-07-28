@@ -26,6 +26,7 @@ bool d=false;
 String serverName="https://unspoilt-compounds.000webhostapp.com/telepost.php?api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu";
 
 #define CHAT_ID "1824993117" 
+#define CHAT_ID1 "876922029"
 #define BMP_SCK (13); 
 #define BMP_MISO (12); 
 #define BMP_MOSI (11); 
@@ -54,7 +55,7 @@ void handler(int count)
   for(int i=0;i<count;i++)
   {
     String id=String(bot.messages[i].chat_id); 
-    if(id!=CHAT_ID)
+    if(id!=CHAT_ID && id!=CHAT_ID1)
     {
       bot.sendMessage(id,"Unauthorised user",""); 
       continue;
