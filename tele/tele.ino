@@ -134,7 +134,7 @@ void setup() {
   pinMode(14,OUTPUT); 
   pinMode(12,OUTPUT); 
   pinMode(13,OUTPUT);
-  if (!bmp.begin()) {
+  if (!bmp.begin(0x76)) {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
   }
 
