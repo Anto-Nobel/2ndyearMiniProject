@@ -6,9 +6,9 @@
   #include <ESP8266HTTPClient.h>
   #include <WiFiClient.h>
 #endif
-#include <SPI.h>
-#include <Wire.h>
-#include <UniversalTelegramBot.h>
+#include <SPI.h> 
+#include <Wire.h> 
+#include <UniversalTelegramBot.h> 
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
@@ -22,7 +22,7 @@ char *ptr=NULL;
 const int ms=27; 
 
 bool d=false;
-#define BOTtoken "1848766361:AAEhUBkZ99IAhFXE5Rv1ETQVVdsUVHNf5QE" 
+#define BOTtoken "1928934218:AAF7F55gMoGMa0wdLKKpRTp2pPDysdha5bk" 
 String serverName="https://unspoilt-compounds.000webhostapp.com/telepost.php?api_key=jdhvbgsdjvhsdbcvjyegfdmsdcvh1278ewqndb23dbu";
 
 #define CHAT_ID "1824993117" 
@@ -156,8 +156,7 @@ void loop() {
   {
     if(d)
   {
-    bot.sendMessage(CHAT_ID,"Motion detected!!"," ");
-    bot.sendMessage(CHAT_ID1,"Motion detected!!"," ");
+    bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
     d=false;
   } 
     int msgcount=bot.getUpdates(bot.last_message_received+1); 
@@ -166,9 +165,7 @@ void loop() {
       Serial.print("Message Received"); 
       handler(msgcount); 
       msgcount=bot.getUpdates(bot.last_message_received+1);
-    }
-    if(c==60)
-    {
+    }  if(c==60){
     WiFiClient client;
     HTTPClient http; 
     //http.begin("https://interscholastic-rec.000webhostapp.com/telepost.php"); 
