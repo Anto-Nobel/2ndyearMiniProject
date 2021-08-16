@@ -6,9 +6,9 @@
   #include <ESP8266HTTPClient.h>
   #include <WiFiClient.h>
 #endif
-#include <SPI.h> 
-#include <Wire.h> 
-#include <UniversalTelegramBot.h> 
+#include <SPI.h>
+#include <Wire.h>
+#include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
@@ -156,7 +156,8 @@ void loop() {
   {
     if(d)
   {
-    bot.sendMessage(CHAT_ID,"Motion detected!!"," "); 
+    bot.sendMessage(CHAT_ID,"Motion detected!!"," ");
+    bot.sendMessage(CHAT_ID1,"Motion detected!!"," ");
     d=false;
   } 
     int msgcount=bot.getUpdates(bot.last_message_received+1); 
@@ -165,7 +166,9 @@ void loop() {
       Serial.print("Message Received"); 
       handler(msgcount); 
       msgcount=bot.getUpdates(bot.last_message_received+1);
-    }  if(c==30){
+    }
+    if(c==60)
+    {
     WiFiClient client;
     HTTPClient http; 
     //http.begin("https://interscholastic-rec.000webhostapp.com/telepost.php"); 
