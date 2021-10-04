@@ -12,8 +12,8 @@
 #include <ArduinoJson.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
-const char* ssid="anto"; 
-const char* pwd="antonobel";
+const char* ssid="nobel"; 
+const char* pwd="sarobert";
 
 char array[7];
 char *smsg[2]; 
@@ -47,10 +47,10 @@ Adafruit_BMP280 bmp;
 
 String getReadings()
 {
-  float t,m; 
+  float t,p; 
   t = bmp.readTemperature();
-  m=bmp.readPressure()/100;
-  return "&t="+String(t) +"&p="+String(m);
+  p=bmp.readPressure()/100;
+  return "&t="+String(t) +"&p="+String(p);
 }  
 
 void handler(int count)
